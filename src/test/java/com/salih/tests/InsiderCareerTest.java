@@ -25,6 +25,7 @@ public class InsiderCareerTest extends BaseTest {
         openPositionsPage = new OpenPositionsPage(driver);
     }
 
+
     @Test(priority = 1)
     public void step1_verifyHomePageIsOpened() {
         homePage.goToHomePage();
@@ -66,10 +67,10 @@ public class InsiderCareerTest extends BaseTest {
     }
 
     @Test(priority = 6, dependsOnMethods = "step5_filterQAJobsInIstanbulAndVerifyList")
-    public void step6_checkJobListPresence() {
-        // Verify that the job list is present after filtering
-        Assert.assertTrue(openPositionsPage.isJobListPresent(),
-                "Job list container is not present after filtering.");
-        System.out.println("Step 6 PASSED: Job list is present.");
+    public void step6_verifyAllCardsTexts() {
+        Assert.assertTrue(openPositionsPage.allJobsMatchQAAndIstanbul(),
+                "Some jobs do not match Position/Department='Quality Assurance' and Location='Istanbul, Turkey/Turkiye'.");
+        System.out.println("Step 6 PASSED: All job cards match expected texts.");
     }
+
 }

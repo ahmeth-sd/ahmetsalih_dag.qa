@@ -3,7 +3,11 @@ package com.salih.pages;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.*;
+
+import java.text.Normalizer;
 import java.time.Duration;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class OpenPositionsPage extends BasePage {
 
@@ -16,9 +20,17 @@ public class OpenPositionsPage extends BasePage {
     private final By select2LocationSelection = By.cssSelector("#select2-filter-by-location-container");
     private final By select2LocationResults = By.id("select2-filter-by-location-results");
     private final By jobCards = By.cssSelector("#jobs-list .position-list-item, #jobs-list [data-position-id]");
+    private final By titleInCard = By.cssSelector(".position-title");
+    private final By departmentInCard = By.cssSelector(".position-department");
+    private final By locationInCard = By.cssSelector(".position-location");
+    private final By viewRoleInCard = By.xpath(".//a[contains(.,'View Role')]");
+    private final Pattern qaPattern = Pattern.compile("(?i)\\b(qa|quality\\s*assurance)\\b");
+
 
     private final Duration SHORT = Duration.ofSeconds(5);
     private final Duration MEDIUM = Duration.ofSeconds(12);
+    private final Duration LONG = Duration.ofSeconds(20);
+
 
     public OpenPositionsPage(WebDriver driver) {
         super(driver);
@@ -56,6 +68,48 @@ public class OpenPositionsPage extends BasePage {
             return false;
         }
     }
+
+    public boolean allJobsMatchQAAndIstanbul() {
+        sleep(1500);
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(jobCards));
+
+        List<WebElement> cards = driver.findElements(jobCards);
+        if (cards.isEmpty()) return false;
+
+        for (WebElement card : cards) {
+            String position = textOf(card, titleInCard);
+            String department = textOf(card, departmentInCard);
+            String location = textOf(card, locationInCard);
+
+            String pos = norm(position);
+            String dep = norm(department);
+            String loc = norm(location);
+
+            boolean posOk = pos.contains("quality assurance");
+            boolean depOk = dep.contains("quality assurance");
+            boolean locOk = loc.contains("istanbul") && (loc.contains("turkiye") || loc.contains("turkey"));
+
+            if (!(posOk && depOk && locOk)) return false;
+        }
+        return true;
+    }
+
+    private String textOf(WebElement root, By locator) {
+        try { return root.findElement(locator).getText().trim(); }
+        catch (Exception e) { return ""; }
+    }
+
+    private String norm(String s) {
+        try {
+            String n = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
+                    .replaceAll("\\p{M}", "");
+            return n.toLowerCase().replace('ı','i').replace('İ','I');
+        } catch (Exception e) {
+            return s == null ? "" : s.toLowerCase();
+        }
+    }
+
 
     private void openLocationDropdown() {
         WebElement selection = new WebDriverWait(driver, MEDIUM)
@@ -98,4 +152,6 @@ public class OpenPositionsPage extends BasePage {
     private void sleep(long millis) {
         try { Thread.sleep(millis); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
     }
+
+
 }
