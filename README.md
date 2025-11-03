@@ -52,7 +52,7 @@ src/
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/ahmeth-sd/insiderTestProject.git
+   git clone https://github.com/ahmeth-sd/ahmetsalih_dag.qa.git
    cd insiderTestProject
    ```
 
