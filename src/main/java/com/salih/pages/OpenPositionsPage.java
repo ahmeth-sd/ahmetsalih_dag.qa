@@ -52,7 +52,7 @@ public class OpenPositionsPage extends BasePage {
     }
 
     public void selectIstanbulTurkiye() {
-        selectLocationWithRetry("Istanbul, Turkiye", 6);
+        selectLocationWithRetry("Istanbul, Turkiye", 10);
     }
 
     public boolean isJobListPresent() {
@@ -94,6 +94,38 @@ public class OpenPositionsPage extends BasePage {
         }
         return true;
     }
+
+    public void clickFirstViewRole() {
+        WebDriverWait w = new WebDriverWait(driver, LONG);
+        w.until(ExpectedConditions.visibilityOfElementLocated(jobCards));
+        WebElement first = driver.findElements(jobCards).get(0);
+        WebElement btn = first.findElement(viewRoleInCard);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+
+        java.util.Set<String> before = driver.getWindowHandles();
+        try { btn.click(); } catch (Exception e) { ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn); }
+
+        w.until(d -> d.getWindowHandles().size() > before.size());
+        java.util.Set<String> after = driver.getWindowHandles();
+        after.removeAll(before);
+        String newHandle = after.iterator().next();
+        driver.switchTo().window(newHandle);
+    }
+
+    public boolean isOnLeverApplicationPage() {
+        WebDriverWait w = new WebDriverWait(driver, LONG);
+        try {
+            w.until(ExpectedConditions.urlContains("lever.co"));
+            return true;
+        } catch (TimeoutException e) {
+            for (String h : driver.getWindowHandles()) {
+                driver.switchTo().window(h);
+                if (driver.getCurrentUrl().contains("lever.co")) return true;
+            }
+            return false;
+        }
+    }
+
 
     private String textOf(WebElement root, By locator) {
         try { return root.findElement(locator).getText().trim(); }

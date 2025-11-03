@@ -73,4 +73,12 @@ public class InsiderCareerTest extends BaseTest {
         System.out.println("Step 6 PASSED: All job cards match expected texts.");
     }
 
+    @Test(priority = 7, dependsOnMethods = "step6_verifyAllCardsTexts")
+    public void step7_verifyLeverRedirection() {
+        openPositionsPage.clickFirstViewRole();
+        Assert.assertTrue(openPositionsPage.isOnLeverApplicationPage(),
+                "Not redirected to Lever application form page.");
+        System.out.println("Step 7 PASSED: Redirected to Lever application page.");
+    }
+
 }
