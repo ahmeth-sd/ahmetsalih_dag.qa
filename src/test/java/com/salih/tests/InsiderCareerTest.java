@@ -3,12 +3,14 @@ import com.salih.pages.CareersPage;
 import com.salih.pages.HomePage;
 import com.salih.pages.OpenPositionsPage;
 import com.salih.pages.QAJobsPage;
+import com.salih.tests.listeners.TestListener;
 import org.testng.Assert;
 
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
-
+@Listeners(TestListener.class)
 public class InsiderCareerTest extends BaseTest {
 
     private HomePage homePage;

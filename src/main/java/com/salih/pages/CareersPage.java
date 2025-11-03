@@ -33,8 +33,6 @@ public class CareersPage extends BasePage {
         waitForVisibility(teamsBlock);
         waitForVisibility(lifeAtInsiderBlock);
 
-        return locationsBlock.isDisplayed()
-                && teamsBlock.isDisplayed()
-                && lifeAtInsiderBlock.isDisplayed();
+        return locationsBlock.isDisplayed() && teamsBlock.isDisplayed() && lifeAtInsiderBlock.isDisplayed();
     }
 }
