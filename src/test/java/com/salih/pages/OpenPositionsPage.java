@@ -4,7 +4,6 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.*;
 
-import java.text.Normalizer;
 import java.time.Duration;
 import java.util.List;
 import java.util.regex.Pattern;
